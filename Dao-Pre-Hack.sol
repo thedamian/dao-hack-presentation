@@ -4,8 +4,12 @@ contract VulnerableFundraiser{
 
     mapping(address=>uint) balances;
 
+    function VulnerableFundraiser() payable {
+        
+    }
+
     // VULNERABLE
-    function withdrawAllMyCoins() {
+    function withdrawAllMyCoins() payable{
     
         uint widthdrawAmout = balances[msg.sender];
         MaliciousWallet wallet = MaliciousWallet(msg.sender);
@@ -36,7 +40,7 @@ contract MaliciousWallet {
     VulnerableFundraiser fundraiser;
     uint recursions = 10;
     
-    function MaliciousWallet(address fundraiserAddress) {
+    function MaliciousWallet(address fundraiserAddress) payable {
         fundraiser = VulnerableFundraiser(fundraiserAddress);
     }
     
@@ -66,7 +70,7 @@ contract MaliciousWallet {
     
     }
     
-    function() payable {
+    function()  payable {
     
         
     }
